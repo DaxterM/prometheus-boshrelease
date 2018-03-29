@@ -56,7 +56,7 @@
       cloudfoundry_alerts:
         app_service_name: "((cloudfoundry_alerts-app_service_name))"
         app_crashed:
-          evaluation_time: "((cloudfoundry_alerts-app_crashed-app_crashed-evaluation_time))"
+          evaluation_time: "((cloudfoundry_alerts-app_crashed-evaluation_time))"
         app_unhealthy:
           evaluation_time: "((cloudfoundry_alerts-app_unhealthy-evaluation_time))"
         cell_unhealthy:
