@@ -1,0 +1,170 @@
+# Apply ./cf/add-prometheus-uaa-clients.yml to your cf-deployment based Cloud Foundry
+# This file assumes bosh_exporter based Service Discovery is being used: ./monitor-bosh.yml
+
+# Exporter jobs
+- type: replace
+  path: /instance_groups/name=prometheus/jobs/-
+  value:
+    name: cf_exporter
+    release: prometheus
+    properties:
+      cf_exporter:
+        cf:
+          api_url: https://api.((system_domain))
+          client_id: cf_exporter
+          client_secret: "((uaa_clients_cf_exporter_secret))"
+          deployment_name: ((metron_deployment_name))
+        metrics:
+          environment: "((metrics_environment))"
+        skip_ssl_verify: ((skip_ssl_verify))
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: firehose
+    azs:
+      - z1
+    instances: 1
+    vm_type: default
+    stemcell: default
+    networks:
+      - name: default
+    jobs:
+      - name: firehose_exporter
+        release: prometheus
+        properties:
+          firehose_exporter:
+            doppler:
+              url: wss://doppler.((system_domain)):((traffic_controller_external_port))
+              subscription_id: "((metrics_environment))"
+              max_retry_count: 300
+            uaa:
+              url: https://uaa.((system_domain))
+              client_id: firehose_exporter
+              client_secret: "((uaa_clients_firehose_exporter_secret))"
+            metrics:
+              environment: "((metrics_environment))"
+            skip_ssl_verify: ((skip_ssl_verify))
+
+# Prometheus Alerts
+- type: replace
+  path: /instance_groups/name=prometheus/jobs/-
+  value:
+    name: cloudfoundry_alerts
+    release: prometheus
+    properties:
+      cloudfoundry_alerts:
+        app_service_name: "((cloudfoundry_alerts-app_service_name))"
+        app_crashed:
+          evaluation_time: "((cloudfoundry_alerts-app_crashed-app_crashed-evaluation_time))"
+        app_unhealthy:
+          evaluation_time: "((cloudfoundry_alerts-app_unhealthy-evaluation_time))"
+        cell_unhealthy:
+          evaluation_time: "((cloudfoundry_alerts-cell_unhealthy-evaluation_time))"
+        overall_available_memory:
+          threshold: "((cloudfoundry_alerts-overall_available_memory-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-overall_available_memory-evaluation_time))"
+        max_available_memory:
+          threshold: "((cloudfoundry_alerts-max_available_memory-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-max_available_memory-evaluation_time))"
+        overall_available_disk:
+          threshold: "((cloudfoundry_alerts-overall_available_disk-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-overall_available_disk-evaluation_time))"
+        max_available_disk:
+          threshold: "((cloudfoundry_alerts-max_available_disk-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-max_available_disk-evaluation_time))"
+        overall_available_containers:
+          threshold: "((cloudfoundry_alerts-overall_available_containers-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-overall_available_containers-evaluation_time))"
+        max_available_containers:
+          threshold: "((cloudfoundry_alerts-max_available_containers-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-max_available_containers-evaluation_time))"
+        lrp_auctions_failed:
+          threshold: "((cloudfoundry_alerts-lrp_auctions_failed-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-lrp_auctions_failed-evaluation_time))"
+        task_auctions_failed:
+          threshold: "((cloudfoundry_alerts-task_auctions_failed-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-task_auctions_failed-evaluation_time))"
+        auctioneer_fetch_states_duration:
+          threshold: "((cloudfoundry_alerts-auctioneer_fetch_states_duration-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-auctioneer_fetch_states_duration-evaluation_time))"
+        bbs_convergence_lrp_duration:
+          threshold: "((cloudfoundry_alerts-bbs_convergence_lrp_duration-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-bbs_convergence_lrp_duration-evaluation_time))"
+        bbs_request_latency:
+          threshold: "((cloudfoundry_alerts-bbs_request_latency-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-bbs_request_latency-evaluation_time))"
+        apps_not_synchronized:
+          evaluation_time: "((cloudfoundry_alerts-apps_not_synchronized-evaluation_time))"
+        tasks_not_synchronized:
+          evaluation_time: "((cloudfoundry_alerts-tasks_not_synchronized-evaluation_time))"
+        app_instances_fewer_than_expected:
+          threshold: "((cloudfoundry_alerts-app_instances_fewer_than_expected-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-app_instances_fewer_than_expected-evaluation_time))"
+        app_instances_more_than_expected:
+          threshold: "((cloudfoundry_alerts-app_instances_more_than_expected-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-app_instances_more_than_expected-evaluation_time))"
+        rep_bulk_synch_duration:
+          threshold: "((cloudfoundry_alerts-rep_bulk_synch_duration-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-rep_bulk_synch_duration-evaluation_time))"
+        nsync_bulker_desired_lrp_sync_duration:
+          threshold: "((cloudfoundry_alerts-nsync_bulker_desired_lrp_sync_duration-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-nsync_bulker_desired_lrp_sync_duration-evaluation_time))"
+        grootfs_create_fail:
+          threshold: "((cloudfoundry_alerts-grootfs_create_fail-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-grootfs_create_fail-evaluation_time))"
+        rootfs_delete_fail:
+          threshold: "((cloudfoundry_alerts-grootfs_delete_fail-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-grootfs_delete_fail-evaluation_time))"
+        firehose_dropped_messages:
+          threshold: "((cloudfoundry_alerts-firehose_dropped_messages-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-firehose_dropped_messages-evaluation_time))"
+        etcd_leaders:
+          evaluation_time: "((cloudfoundry_alerts-etcd_leaders-evaluation_time))"
+        router_emitter_sync_duration:
+          threshold: "((cloudfoundry_alerts-router_emitter_sync_duration-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-router_emitter_sync_duration-evaluation_time))"
+        router_requests:
+          threshold: "((cloudfoundry_alerts-router_requests-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-router_requests-evaluation_time))"
+        routers_latency:
+          threshold: "((cloudfoundry_alerts-routers_latency-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-routers_latency-evaluation_time))"
+        routes_last_registry:
+          threshold: "((cloudfoundry_alerts-routes_last_registry-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-routes_last_registry-evaluation_time))"
+        router_bad_gateway:
+          threshold: "((cloudfoundry_alerts-router_bad_gateway-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-router_bad_gateway-evaluation_time))"
+        router_5xx_responses:
+          threshold: "((cloudfoundry_alerts-router_5xx_responses-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-router_5xx_responses-evaluation_time))"
+        routes_total:
+          threshold: "((cloudfoundry_alerts-routes_total-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-routes_total-evaluation_time))"
+        scrape_error:
+          evaluation_time: "((cloudfoundry_alerts-scrape_error-evaluation_time))"
+        scrape_too_old:
+          threshold: "((cloudfoundry_alerts-scrape_too_old-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-scrape_too_old-evaluation_time))"
+        slow_consumer:
+          evaluation_time: "((cloudfoundry_alerts-slow_consumer-evaluation_time))"
+        envelope_received_too_old: 
+          threshold: "((cloudfoundry_alerts-envelope_received_too_old-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-envelope_received_too_old-evaluation_time))"
+        metric_received_too_old:
+          threshold: "((cloudfoundry_alerts-metric_received_too_old-threshold))"
+          evaluation_time: "((cloudfoundry_alerts-metric_received_too_old-evaluation_time))"
+ 
+- type: replace
+  path: /instance_groups/name=prometheus/jobs/name=prometheus/properties/prometheus/rule_files/-
+  value: /var/vcap/jobs/cloudfoundry_alerts/*.alerts
+
+# Grafana Dashboards
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=cloudfoundry_dashboards?/release
+  value: prometheus
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/prometheus/dashboard_files/-
+  value: /var/vcap/jobs/cloudfoundry_dashboards/*.json
