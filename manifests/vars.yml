@@ -1,0 +1,116 @@
+#monitor-bosh.yml & enable-bosh-uaa.yml  https://github.com/bosh-prometheus/prometheus-boshrelease/blob/master/manifests/operators/monitor-bosh.yml https://github.com/bosh-prometheus/prometheus-boshrelease/blob/master/manifests/operators/enable-bosh-uaa.yml
+bosh_url: https://:25555
+bosh_ca_cert: |
+  -----BEGIN CERTIFICATE-----
+  
+  -----END CERTIFICATE-----
+metrics_environment: 
+uaa_bosh_exporter_client_secret: 
+
+#monitor-cf.yml  https://github.com/bosh-prometheus/prometheus-boshrelease/blob/master/manifests/operators/monitor-cf.yml
+system_domain: 
+uaa_clients_cf_exporter_secret:  
+uaa_clients_firehose_exporter_secret: 
+metron_deployment_name: 
+traffic_controller_external_port: 8081
+skip_ssl_verify: true
+#Cloudfoundry Alerts https://github.com/bosh-prometheus/prometheus-boshrelease/blob/master/jobs/cloudfoundry_alerts/spec
+cloudfoundry_alerts-app_service_name: cf
+cloudfoundry_alerts-app_crashed-evaluation_time: 4h
+cloudfoundry_alerts-app_unhealthy-evaluation_time: 3333m
+cloudfoundry_alerts-cell_unhealthy-evaluation_time: 5m
+cloudfoundry_alerts-overall_available_memory-threshold: 25
+cloudfoundry_alerts-overall_available_memory-evaluation_time: 15m
+cloudfoundry_alerts-max_available_memory-threshold: 4096
+cloudfoundry_alerts-max_available_memory-evaluation_time: 15m
+cloudfoundry_alerts-overall_available_disk-threshold: 25
+cloudfoundry_alerts-overall_available_disk-evaluation_time: 15m
+cloudfoundry_alerts-max_available_disk-threshold: 4096
+cloudfoundry_alerts-max_available_disk-evaluation_time: 15m
+cloudfoundry_alerts-overall_available_containers-threshold: 25
+cloudfoundry_alerts-overall_available_containers-evaluation_time: 15m
+cloudfoundry_alerts-max_available_containers-threshold: 50
+cloudfoundry_alerts-max_available_containers-evaluation_time: 15m
+cloudfoundry_alerts-lrp_auctions_failed-threshold: 1
+cloudfoundry_alerts-lrp_auctions_failed-evaluation_time: 5m
+cloudfoundry_alerts-task_auctions_failed-threshold: 1
+cloudfoundry_alerts-task_auctions_failed-evaluation_time: 5m
+cloudfoundry_alerts-auctioneer_fetch_states_duration-threshold: 5
+cloudfoundry_alerts-auctioneer_fetch_states_duration-evaluation_time: 5m
+cloudfoundry_alerts-bbs_convergence_lrp_duration-threshold: 10
+cloudfoundry_alerts-bbs_convergence_lrp_duration-evaluation_time: 15m
+cloudfoundry_alerts-bbs_request_latency-threshold: 5
+cloudfoundry_alerts-bbs_request_latency-evaluation_time: 15m
+cloudfoundry_alerts-apps_not_synchronized-evaluation_time: 5m
+cloudfoundry_alerts-tasks_not_synchronized-evaluation_time: 5m
+cloudfoundry_alerts-app_instances_fewer_than_expected-threshold: 5
+cloudfoundry_alerts-app_instances_fewer_than_expected-evaluation_time: 5m
+cloudfoundry_alerts-app_instances_more_than_expected-threshold: 5
+cloudfoundry_alerts-app_instances_more_than_expected-evaluation_time: 5m
+cloudfoundry_alerts-rep_bulk_synch_duration-threshold: 10
+cloudfoundry_alerts-rep_bulk_synch_duration-evaluation_time: 15m
+cloudfoundry_alerts-nsync_bulker_desired_lrp_sync_duration-threshold: 10
+cloudfoundry_alerts-nsync_bulker_desired_lrp_sync_duration-evaluation_time: 15m
+cloudfoundry_alerts-grootfs_create_fail-threshold: 1
+cloudfoundry_alerts-grootfs_create_fail-evaluation_time: 5m
+cloudfoundry_alerts-grootfs_delete_fail-threshold: 1
+cloudfoundry_alerts-grootfs_delete_fail-evaluation_time: 5m
+cloudfoundry_alerts-firehose_dropped_messages-threshold: 5
+cloudfoundry_alerts-firehose_dropped_messages-evaluation_time: 5m
+cloudfoundry_alerts-etcd_leaders-evaluation_time: 10m
+cloudfoundry_alerts-router_emitter_sync_duration-threshold: 10
+cloudfoundry_alerts-router_emitter_sync_duration-evaluation_time: 15m
+cloudfoundry_alerts-router_requests-threshold: 2500
+cloudfoundry_alerts-router_requests-evaluation_time: 5m
+cloudfoundry_alerts-routers_latency-threshold: 100
+cloudfoundry_alerts-routers_latency-evaluation_time: 30m
+cloudfoundry_alerts-routes_last_registry-threshold: 30
+cloudfoundry_alerts-routes_last_registry-evaluation_time: 5m
+cloudfoundry_alerts-router_bad_gateway-threshold: 100
+cloudfoundry_alerts-router_bad_gateway-evaluation_time: 5m
+cloudfoundry_alerts-router_5xx_responses-threshold: 100
+cloudfoundry_alerts-router_5xx_responses-evaluation_time: 5m
+cloudfoundry_alerts-routes_total-threshold: 5
+cloudfoundry_alerts-routes_total-evaluation_time: 5m
+cloudfoundry_alerts-scrape_error-evaluation_time: 10m
+cloudfoundry_alerts-scrape_too_old-threshold: 600
+cloudfoundry_alerts-scrape_too_old-evaluation_time: 5m
+cloudfoundry_alerts-slow_consumer-evaluation_time: 5m
+cloudfoundry_alerts-envelope_received_too_old-threshold: 600
+cloudfoundry_alerts-envelope_received_too_old-evaluation_time: 5m
+cloudfoundry_alerts-metric_received_too_old-threshold: 600
+cloudfoundry_alerts-metric_received_too_old-evaluation_time: 5m
+
+#Bosh Alerts https://github.com/bosh-prometheus/prometheus-boshrelease/blob/master/jobs/bosh_alerts/spec
+bosh_alerts-job_unhealthy-evaluation_time: 5m
+bosh_alerts-job_extended_unhealthy-evaluation_time: 30m
+bosh_alerts-process_unhealthy-evaluation_time: 5m
+bosh_alerts-process_extended_unhealthy-evaluation_time: 30m
+bosh_alerts-job_high_cpu_load-threshold: 5
+bosh_alerts-job_high_cpu_load-evaluation_time: 10m
+bosh_alerts-job_low_free_ram-threshold: 75
+bosh_alerts-job_low_free_ram-evaluation_time: 10m
+bosh_alerts-job_low_swap-threshold: 90
+bosh_alerts-job_low_swap-evaluation_time: 10m
+bosh_alerts-job_system_disk_full-threshold: 90
+bosh_alerts-job_system_disk_full-evaluation_time: 30m
+bosh_alerts-job_ephemeral_disk_full-threshold: 80
+bosh_alerts-job_ephemeral_disk_full-evaluation_time: 30m
+bosh_alerts-job_persistent_disk_full-threshold: 90
+bosh_alerts-job_persistent_disk_full-evaluation_time: 30m
+bosh_alerts-job_persistent_disk_inodes_exhausted-threshold: 90
+bosh_alerts-job_persistent_disk_inodes_exhausted-evaluation_time: 30m
+bosh_alerts-job_predict_system_disk_full-threshold: 90
+bosh_alerts-job_predict_system_disk_full-predict_time: 14400
+bosh_alerts-job_predict_system_disk_full-evaluation_time: 30m
+bosh_alerts-job_predict_ephemeral_disk_full-threshold: 80
+bosh_alerts-job_predict_ephemeral_disk_full-predict_time: 14400
+bosh_alerts-job_predict_ephemeral_disk_full-evaluation_time: 30m
+bosh_alerts-job_predict_persistent_disk_full-threshold: 90
+bosh_alerts-job_predict_persistent_disk_full-predict_time: 14400
+bosh_alerts-job_predict_persistent_disk_full-evaluation_time: 30m
+bosh_alerts-scrape_error-evaluation_time: 10m
+bosh_alerts-scrape_too_old-threshold: 600
+bosh_alerts-scrape_too_old-evaluation_time: 5m
+bosh_alerts-tsdb_message_too_old-threshold: 600
+bosh_alerts-tsdb_message_too_old-evaluation_time: 5m
